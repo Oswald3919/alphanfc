@@ -1,6 +1,8 @@
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import TableManager from '@/components/dashboard/TableManager';
+import { getAppBaseUrl } from '@/lib/utils';
 
 export const metadata = { title: 'Placas | AlphaNFC' };
 
@@ -34,8 +36,8 @@ export default async function TablesPage() {
     .eq('business_id', business.id)
     .order('created_at', { ascending: false });
 
-  const protocol = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const baseUrl = protocol.replace(/\/$/, '');
+  const headerStore = await headers();
+  const baseUrl = getAppBaseUrl(headerStore);
 
   return (
     <div style={{ width: '100%', padding: '2rem 3rem' }}>
