@@ -31,7 +31,7 @@ export default function ActionButton({
   const Icon = iconMap[icon] || Star;
 
   return (
-    <form action={trackAction}>
+    <form action={trackAction} target={actionType === 'menu' ? '_blank' : undefined}>
       <input type="hidden" name="tableId" value={tableId} />
       <input type="hidden" name="actionType" value={actionType} />
       <input type="hidden" name="redirectUrl" value={redirectUrl} />

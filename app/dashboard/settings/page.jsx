@@ -14,7 +14,7 @@ export default async function BusinessSettingsPage() {
 
   const { data: business } = await supabase
     .from('businesses')
-    .select('name, google_review_url, menu_url, whatsapp_url')
+    .select('id, name, google_review_url, menu_url, whatsapp_url')
     .eq('user_id', user.id)
     .single();
 
@@ -22,7 +22,7 @@ export default async function BusinessSettingsPage() {
     <div style={{ padding: '2rem 2.5rem', maxWidth: '900px' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.35rem' }}>Configuración del negocio</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Actualiza la identidad del negocio y los enlaces que se abrirán desde tus placas.</p>
+        <p style={{ color: 'var(--text-muted)' }}>Actualiza la identidad del negocio y los enlaces que se abrirán desde tus tótems.</p>
       </div>
 
       <BusinessSettingsForm initialBusiness={business ?? {}} />
