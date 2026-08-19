@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { validateBusinessUrl, validateWhatsappUrl } from '@/lib/utils';
+import { validateBusinessUrl, validatePhoneNumber, validateWhatsappUrl } from '@/lib/utils';
 
 export async function saveBusinessSettings(formData) {
   const supabase = await createClient();
@@ -20,6 +20,13 @@ export async function saveBusinessSettings(formData) {
   const googleReviewUrl = (formData.get('google_review_url') ?? '').toString().trim();
   const menuUrl = (formData.get('menu_url') ?? '').toString().trim();
   const whatsappUrl = (formData.get('whatsapp_url') ?? '').toString().trim();
+  const instagramUrl = (formData.get('instagram_url') ?? '').toString().trim();
+  const facebookUrl = (formData.get('facebook_url') ?? '').toString().trim();
+  const tiktokUrl = (formData.get('tiktok_url') ?? '').toString().trim();
+  const websiteUrl = (formData.get('website_url') ?? '').toString().trim();
+  const phoneNumber = (formData.get('phone_number') ?? '').toString().trim();
+  const wifiName = (formData.get('wifi_name') ?? '').toString().trim();
+  const wifiPassword = (formData.get('wifi_password') ?? '').toString().trim();
 
   if (googleReviewUrl && !validateBusinessUrl(googleReviewUrl)) {
     return { ok: false, message: 'La URL de reseñas de Google no es válida.' };
@@ -33,6 +40,26 @@ export async function saveBusinessSettings(formData) {
     return { ok: false, message: 'El WhatsApp debe ser un enlace válido o un número de teléfono correcto.' };
   }
 
+  if (instagramUrl && !validateBusinessUrl(instagramUrl)) {
+    return { ok: false, message: 'La URL de Instagram no es válida.' };
+  }
+
+  if (facebookUrl && !validateBusinessUrl(facebookUrl)) {
+    return { ok: false, message: 'La URL de Facebook no es válida.' };
+  }
+
+  if (tiktokUrl && !validateBusinessUrl(tiktokUrl)) {
+    return { ok: false, message: 'La URL de TikTok no es válida.' };
+  }
+
+  if (websiteUrl && !validateBusinessUrl(websiteUrl)) {
+    return { ok: false, message: 'La URL del sitio web no es válida.' };
+  }
+
+  if (phoneNumber && !validatePhoneNumber(phoneNumber)) {
+    return { ok: false, message: 'El número telefónico debe ser válido.' };
+  }
+
   const { error } = await supabase
     .from('businesses')
     .update({
@@ -40,6 +67,13 @@ export async function saveBusinessSettings(formData) {
       google_review_url: googleReviewUrl || null,
       menu_url: menuUrl || null,
       whatsapp_url: whatsappUrl || null,
+      instagram_url: instagramUrl || null,
+      facebook_url: facebookUrl || null,
+      tiktok_url: tiktokUrl || null,
+      website_url: websiteUrl || null,
+      phone_number: phoneNumber || null,
+      wifi_name: wifiName || null,
+      wifi_password: wifiPassword || null,
     })
     .eq('user_id', user.id);
 

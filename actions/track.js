@@ -22,7 +22,7 @@ export async function trackAndRedirect(formData) {
   const redirectUrl = formData.get('redirectUrl');
 
   // Validate the action type before inserting to avoid DB constraint errors
-  const validActions = ['google_review', 'menu', 'whatsapp'];
+  const validActions = ['google_review', 'menu', 'whatsapp', 'instagram', 'facebook', 'tiktok', 'website', 'phone'];
   if (!tableId || !validActions.includes(actionType)) {
     // If data is malformed, redirect anyway without logging
     redirect(redirectUrl || '/');

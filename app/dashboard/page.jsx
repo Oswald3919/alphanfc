@@ -76,7 +76,7 @@ export default async function DashboardPage() {
     .select('action_type, created_at')
     .in('table_id', tableIds.length ? tableIds : ['00000000-0000-0000-0000-000000000000']);
 
-  const eventsByType = ['google_review', 'menu', 'whatsapp'].map((type) => ({
+  const eventsByType = ['google_review', 'menu', 'whatsapp', 'instagram', 'facebook', 'tiktok', 'website', 'phone'].map((type) => ({
     type,
     label: actionLabel(type),
     count: (allEvents ?? []).filter((e) => e.action_type === type).length,

@@ -14,6 +14,13 @@ export default function BusinessSettingsForm({ initialBusiness }) {
     google_review_url: initialBusiness?.google_review_url ?? '',
     menu_url: initialBusiness?.menu_url ?? '',
     whatsapp_url: initialBusiness?.whatsapp_url ?? '',
+    instagram_url: initialBusiness?.instagram_url ?? '',
+    facebook_url: initialBusiness?.facebook_url ?? '',
+    tiktok_url: initialBusiness?.tiktok_url ?? '',
+    website_url: initialBusiness?.website_url ?? '',
+    phone_number: initialBusiness?.phone_number ?? '',
+    wifi_name: initialBusiness?.wifi_name ?? '',
+    wifi_password: initialBusiness?.wifi_password ?? '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingMenu, setIsUploadingMenu] = useState(false);
@@ -195,6 +202,94 @@ export default function BusinessSettingsForm({ initialBusiness }) {
               Archivo actual: <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{form.menu_url.includes('/menus/') ? 'Archivo subido en Storage' : 'URL externa configurada'}</span>
             </div>
           )}
+        </div>
+
+        <div>
+          <label className="label" htmlFor="instagram_url">Instagram</label>
+          <input
+            id="instagram_url"
+            name="instagram_url"
+            type="url"
+            value={form.instagram_url}
+            onChange={handleChange}
+            className="input"
+            placeholder="https://instagram.com/tu.negocio"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="facebook_url">Facebook</label>
+          <input
+            id="facebook_url"
+            name="facebook_url"
+            type="url"
+            value={form.facebook_url}
+            onChange={handleChange}
+            className="input"
+            placeholder="https://facebook.com/tu.negocio"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="tiktok_url">TikTok</label>
+          <input
+            id="tiktok_url"
+            name="tiktok_url"
+            type="url"
+            value={form.tiktok_url}
+            onChange={handleChange}
+            className="input"
+            placeholder="https://tiktok.com/@tu.negocio"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="website_url">Sitio web oficial</label>
+          <input
+            id="website_url"
+            name="website_url"
+            type="url"
+            value={form.website_url}
+            onChange={handleChange}
+            className="input"
+            placeholder="https://www.tunegocio.com"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="phone_number">Llamada telefónica</label>
+          <input
+            id="phone_number"
+            name="phone_number"
+            value={form.phone_number}
+            onChange={handleChange}
+            className="input"
+            placeholder="tel:+525512345678"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="wifi_name">Nombre de Wi‑Fi</label>
+          <input
+            id="wifi_name"
+            name="wifi_name"
+            value={form.wifi_name}
+            onChange={handleChange}
+            className="input"
+            placeholder="Nombre de la red"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="wifi_password">Contraseña de Wi‑Fi</label>
+          <input
+            id="wifi_password"
+            name="wifi_password"
+            value={form.wifi_password}
+            onChange={handleChange}
+            className="input"
+            placeholder="Contraseña de acceso"
+          />
         </div>
 
         <div>

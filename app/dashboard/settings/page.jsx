@@ -14,7 +14,7 @@ export default async function BusinessSettingsPage() {
 
   const { data: business } = await supabase
     .from('businesses')
-    .select('id, name, google_review_url, menu_url, whatsapp_url')
+    .select('id, name, google_review_url, menu_url, whatsapp_url, instagram_url, facebook_url, tiktok_url, website_url, phone_number, wifi_name, wifi_password')
     .eq('user_id', user.id)
     .single();
 

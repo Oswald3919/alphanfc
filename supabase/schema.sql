@@ -19,6 +19,13 @@ create table public.businesses (
   google_review_url text,
   menu_url          text,
   whatsapp_url      text,
+  instagram_url     text,
+  facebook_url      text,
+  tiktok_url        text,
+  website_url       text,
+  phone_number      text,
+  wifi_name         text,
+  wifi_password     text,
   created_at        timestamptz not null default now()
 );
 
@@ -53,7 +60,7 @@ create table public.scans (
 create table public.events (
   id          uuid primary key default gen_random_uuid(),
   table_id    uuid not null references public.tables(id) on delete cascade,
-  action_type text not null check (action_type in ('google_review', 'menu', 'whatsapp')),
+  action_type text not null check (action_type in ('google_review', 'menu', 'whatsapp', 'instagram', 'facebook', 'tiktok', 'website', 'phone')),
   created_at  timestamptz not null default now()
 );
 
