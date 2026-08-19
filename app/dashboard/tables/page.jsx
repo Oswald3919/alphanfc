@@ -40,7 +40,7 @@ export default async function TablesPage() {
   const baseUrl = getAppBaseUrl(headerStore);
 
   return (
-    <div style={{ width: '100%', padding: '2rem 3rem' }}>
+    <div style={{ width: '100%', padding: 0 }}>
       <TableManager initialTables={tables ?? []} baseUrl={baseUrl} />
     </div>
   );

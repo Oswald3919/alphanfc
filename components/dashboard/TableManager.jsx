@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { createTableAction, updateTableAction, deleteTableAction } from '@/actions/tables';
@@ -18,6 +18,14 @@ export default function TableManager({ initialTables, baseUrl }) {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [previewTable, setPreviewTable] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const updateViewport = () => setIsMobile(window.innerWidth < 768);
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    return () => window.removeEventListener('resize', updateViewport);
+  }, []);
 
   const sortedTables = useMemo(
     () => [...tables].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
@@ -104,27 +112,59 @@ export default function TableManager({ initialTables, baseUrl }) {
     if (!node) return;
 
     const serializer = new XMLSerializer();
-    const svg = serializer.serializeToString(node);
-    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `qr-${normalizeTableCode(table.code)}.svg`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+    const svgString = serializer.serializeToString(node);
+    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const scale = 4;
+      const size = Math.max(node.getBoundingClientRect().width || 220, 220);
+
+      canvas.width = size * scale;
+      canvas.height = size * scale;
+
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `QR-${normalizeTableCode(table.code)}.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      alert('No se pudo generar la imagen del QR. Inténtalo de nuevo.');
+    };
+
+    img.src = url;
   }
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', gap: '1rem', flexWrap: 'wrap' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '1.5rem',
+        gap: '1rem',
+        flexWrap: 'wrap',
+        padding: isMobile ? '0.5rem 0.5rem 0' : '0',
+      }}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.35rem' }}>Placas y ubicaciones</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Gestiona las mesas, recepción y puntos de interacción del negocio.</p>
+          <h1 style={{ fontSize: isMobile ? '1.6rem' : '2rem', fontWeight: 800, marginBottom: '0.35rem' }}>Placas y ubicaciones</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: isMobile ? '0.82rem' : '1rem' }}>Gestiona las mesas, recepción y puntos de interacción del negocio.</p>
         </div>
 
-        <button type="button" className="btn-primary" onClick={openCreateModal}>
+        <button type="button" className="btn-primary" onClick={openCreateModal} style={{ width: isMobile ? '100%' : 'auto' }}>
           + Nueva placa
         </button>
       </div>
@@ -135,63 +175,111 @@ export default function TableManager({ initialTables, baseUrl }) {
         </div>
       )}
 
-      <div className="glass" style={{ overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Ubicación</th>
-                <th>Código</th>
-                <th>Creación</th>
-                <th>Previsualización</th>
-                <th style={{ textAlign: 'right' }}>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedTables.length === 0 ? (
-                <tr>
-                  <td colSpan={5} style={{ color: 'var(--text-muted)', padding: '1.5rem' }}>
-                    Aún no tienes placas registradas.
-                  </td>
-                </tr>
-              ) : (
-                sortedTables.map((table) => {
-                  const previewUrl = `${baseUrl}/t/${table.code}`;
-                  return (
-                    <tr key={table.id}>
-                      <td style={{ fontWeight: 600 }}>{table.location_name}</td>
-                      <td>
-                        <code style={{ background: 'var(--surface-3)', borderRadius: '6px', padding: '0.2rem 0.5rem', fontFamily: 'monospace', color: 'var(--brand-light)' }}>
-                          {table.code}
-                        </code>
-                      </td>
-                      <td style={{ color: 'var(--text-muted)' }}>{formatDate(table.created_at)}</td>
-                      <td>
-                        <a href={previewUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--brand-light)', fontWeight: 600 }}>
-                          /t/{table.code}
-                        </a>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          <button type="button" className="btn-ghost" onClick={() => handlePreview(table)}>
-                            Ver QR
-                          </button>
-                          <button type="button" className="btn-ghost" onClick={() => openEditModal(table)}>
-                            Editar
-                          </button>
-                          <button type="button" onClick={() => handleDelete(table.id)} style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', color: '#fca5a5', borderRadius: 'var(--radius-md)', padding: '0.55rem 0.9rem', fontWeight: 600 }}>
-                            Eliminar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+      {isMobile ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', padding: '0 0.15rem 1rem' }}>
+          {sortedTables.length === 0 ? (
+            <div style={{ color: 'var(--text-muted)', padding: '1.5rem 0.75rem', background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
+              Aún no tienes placas registradas.
+            </div>
+          ) : (
+            sortedTables.map((table) => {
+              const previewUrl = `${baseUrl}/t/${table.code}`;
+              return (
+                <div key={table.id} style={{ background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem', width: '100%', display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                    <div>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>Ubicación</p>
+                      <strong style={{ fontSize: '1rem' }}>{table.location_name}</strong>
+                    </div>
+                    <code style={{ background: 'var(--surface-3)', borderRadius: '6px', padding: '0.35rem 0.55rem', fontFamily: 'monospace', color: 'var(--brand-light)', fontSize: '0.8rem' }}>
+                      {table.code}
+                    </code>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                    <span>Creación</span>
+                    <span>{formatDate(table.created_at)}</span>
+                  </div>
+
+                  <a href={previewUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--brand-light)', fontWeight: 700, fontSize: '0.92rem' }}>
+                    Ver enlace /t/{table.code}
+                  </a>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '0.55rem' }}>
+                    <button type="button" className="btn-ghost" onClick={() => handlePreview(table)} style={{ width: '100%', padding: '0.8rem 0.45rem', fontSize: '0.8rem' }}>
+                      Ver QR
+                    </button>
+                    <button type="button" className="btn-ghost" onClick={() => openEditModal(table)} style={{ width: '100%', padding: '0.8rem 0.45rem', fontSize: '0.8rem' }}>
+                      Editar
+                    </button>
+                    <button type="button" onClick={() => handleDelete(table.id)} style={{ width: '100%', padding: '0.8rem 0.45rem', fontSize: '0.8rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', color: '#fca5a5', borderRadius: 'var(--radius-md)', fontWeight: 600 }}>
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
-      </div>
+      ) : (
+        <div className="glass" style={{ overflow: 'hidden' }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Ubicación</th>
+                  <th>Código</th>
+                  <th>Creación</th>
+                  <th>Previsualización</th>
+                  <th style={{ textAlign: 'right' }}>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedTables.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ color: 'var(--text-muted)', padding: '1.5rem' }}>
+                      Aún no tienes placas registradas.
+                    </td>
+                  </tr>
+                ) : (
+                  sortedTables.map((table) => {
+                    const previewUrl = `${baseUrl}/t/${table.code}`;
+                    return (
+                      <tr key={table.id}>
+                        <td style={{ fontWeight: 600 }}>{table.location_name}</td>
+                        <td>
+                          <code style={{ background: 'var(--surface-3)', borderRadius: '6px', padding: '0.2rem 0.5rem', fontFamily: 'monospace', color: 'var(--brand-light)' }}>
+                            {table.code}
+                          </code>
+                        </td>
+                        <td style={{ color: 'var(--text-muted)' }}>{formatDate(table.created_at)}</td>
+                        <td>
+                          <a href={previewUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--brand-light)', fontWeight: 600 }}>
+                            /t/{table.code}
+                          </a>
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <button type="button" className="btn-ghost" onClick={() => handlePreview(table)}>
+                              Ver QR
+                            </button>
+                            <button type="button" className="btn-ghost" onClick={() => openEditModal(table)}>
+                              Editar
+                            </button>
+                            <button type="button" onClick={() => handleDelete(table.id)} style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', color: '#fca5a5', borderRadius: 'var(--radius-md)', padding: '0.55rem 0.9rem', fontWeight: 600 }}>
+                              Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {isOpen && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,14,23,0.72)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem' }}>
