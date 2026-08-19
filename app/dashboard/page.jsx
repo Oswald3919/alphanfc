@@ -15,6 +15,7 @@ import { formatNumber, actionLabel } from '@/lib/utils';
 import StatCard from '@/components/ui/StatCard';
 import ScanTable from '@/components/ui/ScanTable';
 import ActivityChart from '@/components/ui/ActivityChart';
+import ExportCsvButton from '@/components/dashboard/ExportCsvButton';
 
 export const metadata = { title: 'Analíticas | AlphaNFC' };
 
@@ -116,6 +117,10 @@ export default async function DashboardPage() {
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
           Datos actualizados cada 60 segundos · Últimos 30 días en el gráfico
         </p>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
+        <ExportCsvButton />
       </div>
 
       {/* ── Stat cards ────────────────────────────────────── */}
