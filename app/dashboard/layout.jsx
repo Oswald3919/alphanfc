@@ -93,10 +93,9 @@ function NavItem({ href, label }) {
       fontSize: '0.9rem',
       fontWeight: 500,
       transition: 'background 0.15s, color 0.15s',
-    }}
-    onMouseEnter={() => {}}  // hover handled via CSS in globals
-    >
+    }}>
       {label}
     </Link>
   );
 }
+
