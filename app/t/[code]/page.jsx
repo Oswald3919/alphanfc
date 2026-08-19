@@ -10,11 +10,11 @@
  * so no client-side JS is needed for analytics.
  */
 import { notFound } from 'next/navigation';
-import { BadgeCheck, Camera, Copy, FileText, Globe, MessageCircle, Music2, Phone, Star, Wifi } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { resolveWhatsAppUrl } from '@/lib/utils';
 import { trackAndRedirect } from '@/actions/track';
 import ActionButton from '@/components/landing/ActionButton';
+import WifiCopyButton from '@/components/landing/WifiCopyButton';
 
 export async function generateMetadata({ params }) {
   const { code } = await params;
@@ -194,29 +194,10 @@ export default async function TrackingPage({ params }) {
         )}
 
         {business.wifi_name && business.wifi_password && (
-          <div style={{ background: 'var(--surface-2)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0', background: 'rgba(34, 197, 94, 0.12)', border: '1px solid rgba(34, 197, 94, 0.4)', color: '#22c55e' }}>
-                <Wifi size={18} strokeWidth={2} />
-              </span>
-              <div>
-                <p style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Wi‑Fi gratis</p>
-                <strong style={{ fontSize: '1rem' }}>{business.wifi_name}</strong>
-              </div>
-            </div>
-
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', padding: '0.75rem 0.875rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{ fontFamily: 'monospace', fontSize: '0.82rem', wordBreak: 'break-all' }}>{business.wifi_password}</span>
-              <button
-                type="button"
-                className="btn-ghost"
-                onClick={() => navigator.clipboard?.writeText(business.wifi_password)}
-                style={{ padding: '0.45rem 0.7rem', minWidth: 'unset' }}
-              >
-                <Copy size={14} />
-              </button>
-            </div>
-          </div>
+          <WifiCopyButton
+            wifiName={business.wifi_name}
+            wifiPassword={business.wifi_password}
+          />
         )}
       </div>
 
