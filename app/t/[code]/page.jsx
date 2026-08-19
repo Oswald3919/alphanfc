@@ -73,7 +73,7 @@ export default async function TrackingPage({ params }) {
       minHeight: '100dvh',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      padding: '2rem 1.25rem',
+      padding: '1rem 1rem 2rem',
       background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.2) 0%, transparent 65%)',
     }}>
       {/* Brand header */}
@@ -91,7 +91,7 @@ export default async function TrackingPage({ params }) {
       </div>
 
       {/* CTA Buttons — each submits a form to the Server Action */}
-      <div style={{ width: '100%', maxWidth: '360px', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+      <div style={{ width: '100%', maxWidth: '420px', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
         {business.google_review_url && (
           <ActionButton
             tableId={tableId}

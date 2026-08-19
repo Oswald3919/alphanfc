@@ -108,7 +108,7 @@ export default async function DashboardPage() {
   const topEvent = [...eventsByType].sort((a, b) => b.count - a.count)[0];
 
   return (
-    <div style={{ width: '100%', padding: '2rem 3rem' }}>
+    <div className="dashboard-container" style={{ width: '100%', padding: '2rem 3rem' }}>
       {/* Page header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.25rem' }}>
@@ -124,7 +124,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Stat cards ────────────────────────────────────── */}
-      <div style={{
+      <div className="stat-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
         gap: '1rem',
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Trend chart + Events breakdown ────────────────── */}
-      <div style={{
+      <div className="dashboard-grid" style={{
         display: 'grid',
         gridTemplateColumns: '2fr 1fr',
         gap: '1.5rem',

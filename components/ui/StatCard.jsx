@@ -35,7 +35,7 @@ export default function StatCard({ icon, label, value, accent, small = false }) 
 
       {/* Value */}
       <p style={{
-        fontSize: small ? '1.1rem' : '2rem',
+        fontSize: small ? 'clamp(0.95rem, 3vw, 1.1rem)' : 'clamp(1.6rem, 5vw, 2rem)',
         fontWeight: 800,
         fontFamily: 'Outfit, sans-serif',
         color: 'var(--text-primary)',

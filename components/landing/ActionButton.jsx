@@ -29,6 +29,7 @@ export default function ActionButton({
         type="submit"
         style={{
           width: '100%',
+          minHeight: '56px',
           display: 'flex',
           alignItems: 'center',
           gap: '1rem',
@@ -44,6 +45,8 @@ export default function ActionButton({
           transition: 'all 0.2s ease',
           textAlign: 'left',
           boxShadow: `0 4px 20px ${color}15`,
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = `${color}18`;

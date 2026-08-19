@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 /**
  * ActivityChart — Line chart showing daily scan trend using Recharts.
  * Marked 'use client' because Recharts requires DOM/browser APIs.
@@ -41,11 +43,20 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export default function ActivityChart({ data }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const updateView = () => setIsMobile(window.innerWidth < 768);
+    updateView();
+    window.addEventListener('resize', updateView);
+    return () => window.removeEventListener('resize', updateView);
+  }, []);
+
   // Show every ~5th label to avoid clutter on a 30-day axis
   const tickIndices = new Set([0, 6, 12, 18, 24, 29]);
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
+    <ResponsiveContainer width="100%" height={isMobile ? 180 : 220}>
       <AreaChart data={data} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="scanGradient" x1="0" y1="0" x2="0" y2="1">
@@ -65,8 +76,13 @@ export default function ActivityChart({ data }) {
           tick={{ fill: '#7c6fa0', fontSize: 11 }}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(val, idx) => tickIndices.has(idx) ? formatAxisDate(val) : ''}
-          interval={0}
+          tickFormatter={(val, idx) => {
+            if (isMobile) {
+              return idx % 5 === 0 ? formatAxisDate(val) : '';
+            }
+            return tickIndices.has(idx) ? formatAxisDate(val) : '';
+          }}
+          interval={isMobile ? 4 : 0}
         />
 
         <YAxis
