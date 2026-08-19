@@ -73,139 +73,130 @@ export default async function TrackingPage({ params }) {
   const whatsappHref = resolveWhatsAppUrl(business.whatsapp_url);
   const phoneHref = business.phone_number ? `tel:${business.phone_number.replace(/\D/g, '')}` : null;
 
+  const primaryActions = [];
+  if (business.menu_url) {
+    primaryActions.push({
+      tableId,
+      actionType: 'menu',
+      redirectUrl: business.menu_url,
+      icon: 'fileText',
+      label: 'Ver menú digital',
+      color: '#ff8a3d',
+      variant: 'menu',
+    });
+  }
+  if (business.google_review_url) {
+    primaryActions.push({
+      tableId,
+      actionType: 'google_review',
+      redirectUrl: business.google_review_url,
+      icon: 'star',
+      label: 'Dejar reseña en Google',
+      color: '#ff6b00',
+    });
+  }
+  if (business.whatsapp_url) {
+    primaryActions.push({
+      tableId,
+      actionType: 'whatsapp',
+      redirectUrl: whatsappHref,
+      icon: 'messageCircle',
+      label: 'WhatsApp',
+      color: '#25d366',
+    });
+  }
+
+  const secondaryActions = [];
+  if (business.instagram_url) secondaryActions.push({ tableId, actionType: 'instagram', redirectUrl: business.instagram_url, icon: 'instagram', label: 'Instagram', color: '#ff5500' });
+  if (business.facebook_url) secondaryActions.push({ tableId, actionType: 'facebook', redirectUrl: business.facebook_url, icon: 'facebook', label: 'Facebook', color: '#1877f2' });
+  if (business.tiktok_url) secondaryActions.push({ tableId, actionType: 'tiktok', redirectUrl: business.tiktok_url, icon: 'tiktok', label: 'TikTok', color: '#ff0050' });
+  if (business.website_url) secondaryActions.push({ tableId, actionType: 'website', redirectUrl: business.website_url, icon: 'globe', label: 'Web', color: '#8b5cf6' });
+  if (business.phone_number) secondaryActions.push({ tableId, actionType: 'phone', redirectUrl: phoneHref, icon: 'phone', label: 'Llamar', color: '#22c55e' });
+
   return (
     <main style={{
       minHeight: '100dvh',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       padding: '1rem 1rem 2rem',
-      background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 85, 0, 0.12) 0%, transparent 65%)',
+      background: 'radial-gradient(ellipse at top, rgba(255, 120, 35, 0.14), transparent 40%), #0a0a0a',
     }}>
-      {/* Brand header */}
-      <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.8125rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
-          {location_name}
-        </p>
-        <h1 style={{ fontSize: 'clamp(2rem, 8vw, 3rem)', fontWeight: 800, lineHeight: 1.1 }}>
-          {business.name}
-        </h1>
-        <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="pulse-dot" />
-          <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>En línea ahora</span>
+      <div style={{
+        width: '100%',
+        maxWidth: '420px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.25rem',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: '0.6rem' }}>
+            {location_name}
+          </p>
+          <h1 style={{ fontSize: 'clamp(1.7rem, 6vw, 2.4rem)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.04em', margin: 0 }}>
+            {business.name}
+          </h1>
+          <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
+            <span className="pulse-dot" />
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>En línea ahora</span>
+          </div>
         </div>
+
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {primaryActions.map((action) => (
+            <ActionButton
+              key={action.actionType}
+              tableId={action.tableId}
+              actionType={action.actionType}
+              redirectUrl={action.redirectUrl}
+              icon={action.icon}
+              label={action.label}
+              color={action.color}
+              variant={action.variant || 'primary'}
+              trackAction={trackAndRedirect}
+            />
+          ))}
+
+          {secondaryActions.length > 0 && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.65rem',
+              flexWrap: 'wrap',
+              paddingTop: '0.1rem',
+            }}>
+              {secondaryActions.map((action) => (
+                <ActionButton
+                  key={action.actionType}
+                  tableId={action.tableId}
+                  actionType={action.actionType}
+                  redirectUrl={action.redirectUrl}
+                  icon={action.icon}
+                  label={action.label}
+                  color={action.color}
+                  trackAction={trackAndRedirect}
+                  variant="social"
+                  compact
+                  showLabel={false}
+                />
+              ))}
+            </div>
+          )}
+
+          {business.wifi_name && business.wifi_password && (
+            <WifiCopyButton
+              wifiName={business.wifi_name}
+              wifiPassword={business.wifi_password}
+            />
+          )}
+        </div>
+
+        <p style={{ margin: '0.5rem 0 0', fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+          Tecnología por{' '}
+          <span style={{ color: 'var(--brand-light)', fontWeight: 700 }}>AlphaNFC</span>
+        </p>
       </div>
-
-      {/* CTA Buttons — each submits a form to the Server Action */}
-      <div style={{ width: '100%', maxWidth: '420px', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-        {business.google_review_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="google_review"
-            redirectUrl={business.google_review_url}
-            icon="star"
-            label="Dejar reseña en Google"
-            color="#ff6b00"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.menu_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="menu"
-            redirectUrl={business.menu_url}
-            icon="fileText"
-            label="Ver menú digital"
-            color="#ff8a3d"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.instagram_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="instagram"
-            redirectUrl={business.instagram_url}
-            icon="instagram"
-            label="Ver Instagram"
-            color="#ff5500"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.facebook_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="facebook"
-            redirectUrl={business.facebook_url}
-            icon="facebook"
-            label="Ver Facebook"
-            color="#1877f2"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.tiktok_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="tiktok"
-            redirectUrl={business.tiktok_url}
-            icon="tiktok"
-            label="Ver TikTok"
-            color="#ff0050"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.website_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="website"
-            redirectUrl={business.website_url}
-            icon="globe"
-            label="Visitar sitio web"
-            color="#8b5cf6"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.phone_number && (
-          <ActionButton
-            tableId={tableId}
-            actionType="phone"
-            redirectUrl={phoneHref}
-            icon="phone"
-            label="Llamar al negocio"
-            color="#22c55e"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.whatsapp_url && (
-          <ActionButton
-            tableId={tableId}
-            actionType="whatsapp"
-            redirectUrl={whatsappHref}
-            icon="messageCircle"
-            label="Contactar por WhatsApp"
-            color="#ff5500"
-            trackAction={trackAndRedirect}
-          />
-        )}
-
-        {business.wifi_name && business.wifi_password && (
-          <WifiCopyButton
-            wifiName={business.wifi_name}
-            wifiPassword={business.wifi_password}
-          />
-        )}
-      </div>
-
-      {/* Powered-by footer */}
-      <p style={{ marginTop: '3rem', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-        Tecnología por{' '}
-        <span style={{ color: 'var(--brand-light)', fontWeight: 600 }}>AlphaNFC</span>
-      </p>
     </main>
   );
 }
