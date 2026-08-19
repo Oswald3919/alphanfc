@@ -43,7 +43,7 @@ export default async function DashboardPage() {
     );
   }
 
-  // ── 1. Fetch all tables for this business ─────────────────
+  // ── 1. Fetch all totems for this business ─────────────────
   const { data: businessTables } = await supabase
     .from('tables')
     .select('id, location_name, code')
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
         />
         <StatCard
           icon={MapPinned}
-          label="Placas activas"
+          label="Tótems activos"
           value={formatNumber(businessTables?.length ?? 0)}
           accent="#ff7a33"
         />

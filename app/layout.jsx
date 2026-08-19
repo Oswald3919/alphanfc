@@ -6,7 +6,7 @@ export const metadata = {
     template: '%s | AlphaNFC',
   },
   description:
-    'Plataforma SaaS que conecta ubicaciones físicas con analíticas digitales mediante placas de acrílico con QR y NFC.',
+    'Plataforma SaaS que conecta ubicaciones físicas con analíticas digitales mediante tótems con QR y NFC.',
   keywords: ['NFC', 'QR', 'analíticas', 'negocio', 'reseñas', 'menú digital'],
 };
 

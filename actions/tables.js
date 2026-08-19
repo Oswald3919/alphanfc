@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { normalizeTableCode } from '@/lib/utils';
+import { normalizeTotemCode } from '@/lib/utils';
 
 async function getBusinessId({ userId }) {
   const supabase = await createClient();
@@ -30,12 +30,12 @@ function parseLocationName(raw) {
   return { value };
 }
 
-export async function createTableAction(formData) {
+export async function createTotemAction(formData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { ok: false, message: 'Debes iniciar sesión para crear placas.' };
+    return { ok: false, message: 'Debes iniciar sesión para crear tótems.' };
   }
 
   const locationNameResult = parseLocationName(formData.get('location_name'));
@@ -43,9 +43,9 @@ export async function createTableAction(formData) {
     return { ok: false, message: locationNameResult.error };
   }
 
-  const code = normalizeTableCode(formData.get('code') || formData.get('location_name'));
+  const code = normalizeTotemCode(formData.get('code') || formData.get('location_name'));
   if (!code) {
-    return { ok: false, message: 'El código de placa no es válido.' };
+    return { ok: false, message: 'El código del tótem no es válido.' };
   }
 
   const businessId = await getBusinessId({ userId: user.id });
@@ -62,7 +62,7 @@ export async function createTableAction(formData) {
   if (error) {
     const message = error.code === '23505'
       ? 'Ese código ya está registrado. Usa uno diferente.'
-      : 'No se pudo crear la placa. Inténtalo de nuevo.';
+      : 'No se pudo crear el tótem. Inténtalo de nuevo.';
     return { ok: false, message };
   }
 
@@ -71,28 +71,28 @@ export async function createTableAction(formData) {
 
   return {
     ok: true,
-    message: 'Placa creada correctamente.',
+    message: 'Tótem creado correctamente.',
     code,
   };
 }
 
-export async function updateTableAction(formData) {
+export async function updateTotemAction(formData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { ok: false, message: 'Debes iniciar sesión para editar placas.' };
+    return { ok: false, message: 'Debes iniciar sesión para editar tótems.' };
   }
 
   const tableId = formData.get('table_id');
   const locationNameResult = parseLocationName(formData.get('location_name'));
   if (!tableId || !locationNameResult.value) {
-    return { ok: false, message: 'La placa que intentas editar no es válida.' };
+    return { ok: false, message: 'El tótem que intentas editar no es válido.' };
   }
 
-  const code = normalizeTableCode(formData.get('code'));
+  const code = normalizeTotemCode(formData.get('code'));
   if (!code) {
-    return { ok: false, message: 'El código de placa no es válido.' };
+    return { ok: false, message: 'El código del tótem no es válido.' };
   }
 
   const businessId = await getBusinessId({ userId: user.id });
@@ -112,7 +112,7 @@ export async function updateTableAction(formData) {
   if (error) {
     const message = error.code === '23505'
       ? 'Ese código ya existe. Cambia la ubicación o el código.'
-      : 'No se pudo actualizar la ubicación.';
+      : 'No se pudo actualizar la ubicación del tótem.';
     return { ok: false, message };
   }
 
@@ -121,22 +121,22 @@ export async function updateTableAction(formData) {
 
   return {
     ok: true,
-    message: 'Ubicación actualizada correctamente.',
+    message: 'Ubicación del tótem actualizada correctamente.',
     code,
   };
 }
 
-export async function deleteTableAction(formData) {
+export async function deleteTotemAction(formData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { ok: false, message: 'Debes iniciar sesión para eliminar placas.' };
+    return { ok: false, message: 'Debes iniciar sesión para eliminar tótems.' };
   }
 
   const tableId = formData.get('table_id');
   if (!tableId) {
-    return { ok: false, message: 'No se pudo identificar la placa a eliminar.' };
+    return { ok: false, message: 'No se pudo identificar el tótem a eliminar.' };
   }
 
   const businessId = await getBusinessId({ userId: user.id });
@@ -151,7 +151,7 @@ export async function deleteTableAction(formData) {
     .eq('business_id', businessId);
 
   if (error) {
-    return { ok: false, message: 'No se pudo eliminar la placa. Inténtalo de nuevo.' };
+    return { ok: false, message: 'No se pudo eliminar el tótem. Inténtalo de nuevo.' };
   }
 
   revalidatePath('/dashboard');
@@ -159,6 +159,10 @@ export async function deleteTableAction(formData) {
 
   return {
     ok: true,
-    message: 'Placa eliminada correctamente.',
+    message: 'Tótem eliminado correctamente.',
   };
 }
+
+export const createTableAction = createTotemAction;
+export const updateTableAction = updateTotemAction;
+export const deleteTableAction = deleteTotemAction;

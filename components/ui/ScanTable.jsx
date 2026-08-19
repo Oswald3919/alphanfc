@@ -8,7 +8,7 @@ export default function ScanTable({ rows, total }) {
   if (!rows || rows.length === 0) {
     return (
       <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', padding: '1rem 0' }}>
-        No hay placas registradas aún. Crea tu primera placa en "Mis placas".
+        No hay tótems registrados aún. Crea tu primer tótem en "Mis tótems".
       </p>
     );
   }

@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import TableManager from '@/components/dashboard/TableManager';
 import { getAppBaseUrl } from '@/lib/utils';
 
-export const metadata = { title: 'Placas | AlphaNFC' };
+export const metadata = { title: 'Tótems | AlphaNFC' };
 
 export const revalidate = 60;
 

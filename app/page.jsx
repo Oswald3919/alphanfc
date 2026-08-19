@@ -2,9 +2,9 @@ import Link from 'next/link';
 import { ArrowRight, BarChart3, FileText, MessageCircle, Star } from 'lucide-react';
 
 export const metadata = {
-  title: 'AlphaNFC — Placas NFC y QR con analíticas para tu negocio',
+  title: 'AlphaNFC — Tótems NFC y QR con analíticas para tu negocio',
   description:
-    'Conecta tus mesas, mostrador y recepción con analíticas en tiempo real. Sin apps. Sin fricción.',
+    'Conecta tus puntos físicos con analíticas en tiempo real. Sin apps. Sin fricción.',
 };
 
 export default function HomePage() {
@@ -47,7 +47,7 @@ export default function HomePage() {
         </h1>
 
         <p className="animate-fade-up delay-200" style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'var(--text-secondary)', maxWidth: '560px', marginBottom: '2.5rem', lineHeight: 1.7 }}>
-          Placas de acrílico con QR y NFC (NTAG213) que registran cada interacción.
+          Tótems interactivos con QR y NFC (NTAG213) que registran cada interacción.
           Reseñas en Google, menú digital, WhatsApp — todo desde un escaneo.
         </p>
 
@@ -63,7 +63,7 @@ export default function HomePage() {
 
       <section id="como-funciona" style={{ padding: '5rem 1.5rem', maxWidth: '1100px', margin: '0 auto', width: '100%' }}>
         <h2 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-          Todo lo que necesitas en una sola placa
+          Todo lo que necesitas en un solo tótem
         </h2>
         <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '500px', margin: '0 auto 3rem' }}>
           Sin descargar apps. Sin registros complicados. Solo escanear y listo.

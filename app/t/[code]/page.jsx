@@ -2,7 +2,7 @@
  * Dynamic Tracking Route — /t/[code]
  *
  * Server Component that:
- * 1. Resolves the plate `code` → table + business data from Supabase.
+ * 1. Resolves the totem `code` → table + business data from Supabase.
  * 2. Inserts a scan row (tracks every visit, anonymous or not).
  * 3. Renders a mobile-first landing page with CTA buttons.
  *
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
     .eq('code', code)
     .single();
 
-  if (!data) return { title: 'Placa no encontrada | AlphaNFC' };
+  if (!data) return { title: 'Tótem no encontrado | AlphaNFC' };
 
   return {
     title: `${data.businesses.name} — ${data.location_name}`,
@@ -38,7 +38,7 @@ export default async function TrackingPage({ params }) {
   const { code } = await params;
   const supabase = await createClient();
 
-  // ── 1. Resolve plate code → table + business ──────────────
+  // ── 1. Resolve totem code → table + business ──────────────
   const { data: table, error } = await supabase
     .from('tables')
     .select(`

@@ -8,7 +8,7 @@ import LogoutButton from '@/components/ui/LogoutButton';
 
 const navItems = [
   { href: '/dashboard', label: 'Analíticas', icon: BarChart3 },
-  { href: '/dashboard/tables', label: 'Mis placas', icon: LayoutGrid },
+  { href: '/dashboard/tables', label: 'Mis tótems', icon: LayoutGrid },
   { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
 ];
 

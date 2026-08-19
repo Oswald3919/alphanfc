@@ -160,12 +160,12 @@ export default function TableManager({ initialTables, baseUrl }) {
         padding: isMobile ? '0.5rem 0.5rem 0' : '0',
       }}>
         <div>
-          <h1 style={{ fontSize: isMobile ? '1.6rem' : '2rem', fontWeight: 800, marginBottom: '0.35rem' }}>Placas y ubicaciones</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: isMobile ? '0.82rem' : '1rem' }}>Gestiona las mesas, recepción y puntos de interacción del negocio.</p>
+          <h1 style={{ fontSize: isMobile ? '1.6rem' : '2rem', fontWeight: 800, marginBottom: '0.35rem' }}>Tótems y ubicaciones</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: isMobile ? '0.82rem' : '1rem' }}>Gestiona los puntos de interacción del negocio.</p>
         </div>
 
         <button type="button" className="btn-primary" onClick={openCreateModal} style={{ width: isMobile ? '100%' : 'auto' }}>
-          + Nueva placa
+          + Nuevo tótem
         </button>
       </div>
 
@@ -179,7 +179,7 @@ export default function TableManager({ initialTables, baseUrl }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', padding: '0 0.15rem 1rem' }}>
           {sortedTables.length === 0 ? (
             <div style={{ color: 'var(--text-muted)', padding: '1.5rem 0.75rem', background: 'var(--surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
-              Aún no tienes placas registradas.
+              Aún no tienes tótems registrados.
             </div>
           ) : (
             sortedTables.map((table) => {
@@ -238,7 +238,7 @@ export default function TableManager({ initialTables, baseUrl }) {
                 {sortedTables.length === 0 ? (
                   <tr>
                     <td colSpan={5} style={{ color: 'var(--text-muted)', padding: '1.5rem' }}>
-                      Aún no tienes placas registradas.
+                      Aún no tienes tótems registrados.
                     </td>
                   </tr>
                 ) : (
@@ -285,7 +285,7 @@ export default function TableManager({ initialTables, baseUrl }) {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,14,23,0.72)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem' }}>
           <div className="glass" style={{ width: '100%', maxWidth: '520px', padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{editingId ? 'Editar ubicación' : 'Nueva placa'}</h2>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{editingId ? 'Editar ubicación' : 'Nuevo tótem'}</h2>
               <button type="button" onClick={() => setIsOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem' }}>
                 ×
               </button>
@@ -328,7 +328,7 @@ export default function TableManager({ initialTables, baseUrl }) {
                   Cancelar
                 </button>
                 <button type="submit" className="btn-primary" disabled={isBusy} style={{ opacity: isBusy ? 0.7 : 1 }}>
-                  {isBusy ? 'Guardando…' : editingId ? 'Guardar cambios' : 'Crear placa'}
+                  {isBusy ? 'Guardando…' : editingId ? 'Guardar cambios' : 'Crear tótem'}
                 </button>
               </div>
             </form>
