@@ -1,0 +1,139 @@
+/**
+ * Dynamic Tracking Route — /t/[code]
+ *
+ * Server Component that:
+ * 1. Resolves the plate `code` → table + business data from Supabase.
+ * 2. Inserts a scan row (tracks every visit, anonymous or not).
+ * 3. Renders a mobile-first landing page with CTA buttons.
+ *
+ * Click tracking is handled by a Server Action (actions/track.js)
+ * so no client-side JS is needed for analytics.
+ */
+import { notFound } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { resolveWhatsAppUrl } from '@/lib/utils';
+import { trackAndRedirect } from '@/actions/track';
+import ActionButton from '@/components/landing/ActionButton';
+
+export async function generateMetadata({ params }) {
+  const { code } = await params;
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from('tables')
+    .select('location_name, businesses(name)')
+    .eq('code', code)
+    .single();
+
+  if (!data) return { title: 'Placa no encontrada | AlphaNFC' };
+
+  return {
+    title: `${data.businesses.name} — ${data.location_name}`,
+    description: `Accede al menú, deja una reseña o contacta por WhatsApp a ${data.businesses.name}.`,
+  };
+}
+
+export default async function TrackingPage({ params }) {
+  const { code } = await params;
+  const supabase = await createClient();
+
+  // ── 1. Resolve plate code → table + business ──────────────
+  const { data: table, error } = await supabase
+    .from('tables')
+    .select(`
+      id,
+      location_name,
+      businesses (
+        name,
+        google_review_url,
+        menu_url,
+        whatsapp_url
+      )
+    `)
+    .eq('code', code.toUpperCase())
+    .single();
+
+  // Gracefully handle not-found or DB errors
+  if (error || !table) {
+    notFound();
+  }
+
+  const { id: tableId, location_name, businesses: business } = table;
+
+  // ── 2. Record the scan (fire-and-forget — no await blocking render) ──
+  // We do await here since it's server-side and fast; UX is not affected.
+  await supabase.from('scans').insert({ table_id: tableId });
+
+  // ── 3. Resolve WhatsApp URL ───────────────────────────────
+  const whatsappHref = resolveWhatsAppUrl(business.whatsapp_url);
+
+  // ── 4. Render mobile-first landing page ───────────────────
+  return (
+    <main style={{
+      minHeight: '100dvh',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '2rem 1.25rem',
+      background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.2) 0%, transparent 65%)',
+    }}>
+      {/* Brand header */}
+      <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.8125rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+          {location_name}
+        </p>
+        <h1 style={{ fontSize: 'clamp(2rem, 8vw, 3rem)', fontWeight: 800, lineHeight: 1.1 }}>
+          {business.name}
+        </h1>
+        <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
+          <span className="pulse-dot" />
+          <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>En línea ahora</span>
+        </div>
+      </div>
+
+      {/* CTA Buttons — each submits a form to the Server Action */}
+      <div style={{ width: '100%', maxWidth: '360px', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+        {business.google_review_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="google_review"
+            redirectUrl={business.google_review_url}
+            icon="⭐"
+            label="Dejar reseña en Google"
+            color="#f59e0b"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
+        {business.menu_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="menu"
+            redirectUrl={business.menu_url}
+            icon="📋"
+            label="Ver menú digital"
+            color="#6366f1"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
+        {business.whatsapp_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="whatsapp"
+            redirectUrl={whatsappHref}
+            icon="💬"
+            label="Contactar por WhatsApp"
+            color="#22c55e"
+            trackAction={trackAndRedirect}
+          />
+        )}
+      </div>
+
+      {/* Powered-by footer */}
+      <p style={{ marginTop: '3rem', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+        Tecnología por{' '}
+        <span style={{ color: 'var(--brand-light)', fontWeight: 600 }}>AlphaNFC</span>
+      </p>
+    </main>
+  );
+}
