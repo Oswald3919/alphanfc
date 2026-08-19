@@ -11,15 +11,25 @@
 
 'use client';
 
+import { FileText, MessageCircle, Star } from 'lucide-react';
+
+const iconMap = {
+  star: Star,
+  fileText: FileText,
+  messageCircle: MessageCircle,
+};
+
 export default function ActionButton({
   tableId,
   actionType,
   redirectUrl,
-  icon: Icon,
+  icon,
   label,
   color,
   trackAction,
 }) {
+  const Icon = iconMap[icon] || Star;
+
   return (
     <form action={trackAction}>
       <input type="hidden" name="tableId" value={tableId} />
@@ -71,7 +81,7 @@ export default function ActionButton({
           flexShrink: 0,
           color: color,
         }}>
-          {Icon ? <Icon size={18} strokeWidth={2} /> : null}
+          <Icon size={18} strokeWidth={2} />
         </span>
 
         <span style={{ flex: 1 }}>{label}</span>

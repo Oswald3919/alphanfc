@@ -98,7 +98,7 @@ export default async function TrackingPage({ params }) {
             tableId={tableId}
             actionType="google_review"
             redirectUrl={business.google_review_url}
-            icon={Star}
+            icon="star"
             label="Dejar reseña en Google"
             color="#ff6b00"
             trackAction={trackAndRedirect}
@@ -110,7 +110,7 @@ export default async function TrackingPage({ params }) {
             tableId={tableId}
             actionType="menu"
             redirectUrl={business.menu_url}
-            icon={FileText}
+            icon="fileText"
             label="Ver menú digital"
             color="#ff8a3d"
             trackAction={trackAndRedirect}
@@ -122,7 +122,7 @@ export default async function TrackingPage({ params }) {
             tableId={tableId}
             actionType="whatsapp"
             redirectUrl={whatsappHref}
-            icon={MessageCircle}
+            icon="messageCircle"
             label="Contactar por WhatsApp"
             color="#ff5500"
             trackAction={trackAndRedirect}
