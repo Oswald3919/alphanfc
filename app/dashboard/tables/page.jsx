@@ -38,7 +38,7 @@ export default async function TablesPage() {
   const baseUrl = protocol.replace(/\/$/, '');
 
   return (
-    <div style={{ padding: '2rem 2.5rem', maxWidth: '1200px' }}>
+    <div style={{ width: '100%', padding: '2rem 3rem' }}>
       <TableManager initialTables={tables ?? []} baseUrl={baseUrl} />
     </div>
   );

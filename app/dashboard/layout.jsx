@@ -76,7 +76,7 @@ export default async function DashboardLayout({ children }) {
       </aside>
 
       {/* ── Main content ────────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY: 'auto', background: 'var(--surface-0)' }}>
+      <div style={{ flex: 1, width: '100%', overflowY: 'auto', background: 'var(--surface-0)' }}>
         {children}
       </div>
     </div>
