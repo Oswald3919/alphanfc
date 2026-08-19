@@ -2,7 +2,7 @@
  * StatCard — Summary metric card for the dashboard.
  * Server-renderable (no 'use client' needed).
  */
-export default function StatCard({ icon, label, value, accent, small = false }) {
+export default function StatCard({ icon: Icon, label, value, accent, small = false }) {
   return (
     <div className="stat-card animate-fade-up" style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Glow background accent */}
@@ -22,14 +22,14 @@ export default function StatCard({ icon, label, value, accent, small = false }) 
         background: `${accent}18`,
         border: `1px solid ${accent}30`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '1.25rem',
         marginBottom: '1rem',
+        color: 'var(--text-primary)',
       }}>
-        {icon}
+        {Icon ? <Icon size={18} strokeWidth={1.8} /> : null}
       </div>
 
       {/* Label */}
-      <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500, marginBottom: '0.375rem' }}>
+      <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.375rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
         {label}
       </p>
 

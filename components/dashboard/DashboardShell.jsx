@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { BarChart3, LayoutGrid, Settings, Menu, LogOut } from 'lucide-react';
 import LogoutButton from '@/components/ui/LogoutButton';
 
 const navItems = [
-  { href: '/dashboard', label: '📊 Analíticas' },
-  { href: '/dashboard/tables', label: '📍 Mis placas' },
-  { href: '/dashboard/settings', label: '⚙️ Configuración' },
+  { href: '/dashboard', label: 'Analíticas', icon: BarChart3 },
+  { href: '/dashboard/tables', label: 'Mis placas', icon: LayoutGrid },
+  { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
 ];
 
 export default function DashboardShell({ businessName, children }) {
@@ -64,7 +65,7 @@ export default function DashboardShell({ businessName, children }) {
 
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           {navItems.map((item) => (
-            <NavItem key={item.href} href={item.href} label={item.label} active={pathname === item.href} onNavigate={() => setMobileOpen(false)} />
+            <NavItem key={item.href} href={item.href} label={item.label} active={pathname === item.href} onNavigate={() => setMobileOpen(false)} icon={item.icon} />
           ))}
         </nav>
 
@@ -86,8 +87,7 @@ export default function DashboardShell({ businessName, children }) {
             justifyContent: 'space-between',
             gap: '0.75rem',
             padding: '0.9rem 1rem',
-            background: 'rgba(15, 14, 23, 0.92)',
-            backdropFilter: 'blur(12px)',
+            background: 'rgba(10, 10, 10, 0.96)',
             borderBottom: '1px solid var(--border-subtle)',
           }}>
             <Link href="/" style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '1.2rem' }}>
@@ -105,15 +105,16 @@ export default function DashboardShell({ businessName, children }) {
                 style={{
                   width: '42px',
                   height: '42px',
-                  borderRadius: '10px',
+                  borderRadius: '0',
                   background: 'var(--surface-2)',
                   border: '1px solid var(--border-subtle)',
                   color: 'var(--text-primary)',
-                  fontSize: '1.35rem',
-                  lineHeight: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                ☰
+                <Menu size={18} />
               </button>
             </div>
           </div>
@@ -124,7 +125,7 @@ export default function DashboardShell({ businessName, children }) {
               style={{
                 position: 'fixed',
                 inset: 0,
-                background: 'rgba(9, 9, 12, 0.56)',
+                background: 'rgba(0, 0, 0, 0.65)',
                 zIndex: 45,
               }}
             />
@@ -150,7 +151,7 @@ export default function DashboardShell({ businessName, children }) {
             }}
           >
             {navItems.map((item) => (
-              <NavItem key={item.href} href={item.href} label={item.label} active={pathname === item.href} onNavigate={() => setMobileOpen(false)} mobile />
+              <NavItem key={item.href} href={item.href} label={item.label} active={pathname === item.href} onNavigate={() => setMobileOpen(false)} icon={item.icon} mobile />
             ))}
 
             <div style={{ marginTop: 'auto', borderTop: '1px solid var(--border-subtle)', paddingTop: '1rem' }}>
@@ -173,24 +174,27 @@ export default function DashboardShell({ businessName, children }) {
   );
 }
 
-function NavItem({ href, label, active = false, onNavigate, mobile = false }) {
+function NavItem({ href, label, active = false, onNavigate, icon: Icon, mobile = false }) {
   return (
     <Link
       href={href}
       onClick={onNavigate}
       style={{
-        display: 'block',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
         padding: mobile ? '0.8rem 0.75rem' : '0.625rem 0.75rem',
         borderRadius: 'var(--radius-sm)',
         color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
-        background: active ? 'rgba(124, 58, 237, 0.15)' : 'transparent',
-        border: active ? '1px solid rgba(167, 139, 250, 0.25)' : '1px solid transparent',
+        background: active ? 'rgba(255, 85, 0, 0.12)' : 'transparent',
+        border: active ? '1px solid rgba(255, 85, 0, 0.25)' : '1px solid transparent',
         fontSize: mobile ? '0.95rem' : '0.9rem',
-        fontWeight: 500,
+        fontWeight: 600,
         transition: 'background 0.15s, color 0.15s',
       }}
     >
-      {label}
+      <Icon size={16} strokeWidth={1.7} />
+      <span>{label}</span>
     </Link>
   );
 }

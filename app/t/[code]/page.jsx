@@ -10,6 +10,7 @@
  * so no client-side JS is needed for analytics.
  */
 import { notFound } from 'next/navigation';
+import { FileText, MessageCircle, Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { resolveWhatsAppUrl } from '@/lib/utils';
 import { trackAndRedirect } from '@/actions/track';
@@ -74,7 +75,7 @@ export default async function TrackingPage({ params }) {
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '1rem 1rem 2rem',
-      background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.2) 0%, transparent 65%)',
+      background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 85, 0, 0.12) 0%, transparent 65%)',
     }}>
       {/* Brand header */}
       <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
@@ -97,9 +98,9 @@ export default async function TrackingPage({ params }) {
             tableId={tableId}
             actionType="google_review"
             redirectUrl={business.google_review_url}
-            icon="⭐"
+            icon={Star}
             label="Dejar reseña en Google"
-            color="#f59e0b"
+            color="#ff6b00"
             trackAction={trackAndRedirect}
           />
         )}
@@ -109,9 +110,9 @@ export default async function TrackingPage({ params }) {
             tableId={tableId}
             actionType="menu"
             redirectUrl={business.menu_url}
-            icon="📋"
+            icon={FileText}
             label="Ver menú digital"
-            color="#6366f1"
+            color="#ff8a3d"
             trackAction={trackAndRedirect}
           />
         )}
@@ -121,9 +122,9 @@ export default async function TrackingPage({ params }) {
             tableId={tableId}
             actionType="whatsapp"
             redirectUrl={whatsappHref}
-            icon="💬"
+            icon={MessageCircle}
             label="Contactar por WhatsApp"
-            color="#22c55e"
+            color="#ff5500"
             trackAction={trackAndRedirect}
           />
         )}

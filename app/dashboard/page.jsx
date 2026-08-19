@@ -10,6 +10,7 @@
  *  - Events breakdown by action_type
  *  - Daily scan trend for the last 30 days
  */
+import { BarChart3, Eye, MapPinned, Trophy } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { formatNumber, actionLabel } from '@/lib/utils';
 import StatCard from '@/components/ui/StatCard';
@@ -131,28 +132,28 @@ export default async function DashboardPage() {
         marginBottom: '2rem',
       }}>
         <StatCard
-          icon="👁️"
+          icon={Eye}
           label="Escaneos totales"
           value={formatNumber(totalScans ?? 0)}
-          accent="#7c3aed"
+          accent="#ff5500"
         />
         <StatCard
-          icon="📍"
+          icon={MapPinned}
           label="Placas activas"
           value={formatNumber(businessTables?.length ?? 0)}
-          accent="#6366f1"
+          accent="#ff7a33"
         />
         <StatCard
-          icon="⚡"
+          icon={BarChart3}
           label="Interacciones totales"
           value={formatNumber(allEvents?.length ?? 0)}
-          accent="#a78bfa"
+          accent="#ff9c5c"
         />
         <StatCard
-          icon="🏆"
+          icon={Trophy}
           label="Acción más popular"
           value={topEvent?.count ? topEvent.label : '—'}
-          accent="#f59e0b"
+          accent="#ffd1b1"
           small
         />
       </div>

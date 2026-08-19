@@ -4,28 +4,31 @@
 
 /* ─── Design Tokens ───────────────────────────────────────── */
 :root {
-  --brand-primary:   #7c3aed;   /* violet-600 */
-  --brand-light:     #a78bfa;   /* violet-400 */
-  --brand-dark:      #4c1d95;   /* violet-900 */
-  --surface-0:       #0f0e17;   /* deep near-black */
-  --surface-1:       #1a1826;
-  --surface-2:       #231f35;
-  --surface-3:       #2d2845;
-  --border-subtle:   rgba(167, 139, 250, 0.15);
-  --text-primary:    #f5f3ff;
-  --text-secondary:  #c4b5fd;
-  --text-muted:      #7c6fa0;
-  --success:         #34d399;
-  --warning:         #fbbf24;
-  --danger:          #f87171;
+  --bg-main: #000000;
+  --surface-0: #000000;
+  --surface-1: #0a0a0a;
+  --surface-2: #111111;
+  --surface-3: #181818;
+  --border-sharp: #222222;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --brand-primary: #ff5500;
+  --brand-light: #ff7a33;
+  --brand-dark: #b93d00;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-muted: #888888;
+  --success: #2dd4bf;
+  --warning: #fbbf24;
+  --danger: #ff5d5d;
 
-  --radius-sm:  6px;
-  --radius-md:  12px;
-  --radius-lg:  20px;
-  --radius-xl:  32px;
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 
-  --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.25);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 0 1px rgba(255, 85, 0, 0.25), 0 12px 30px rgba(255, 85, 0, 0.18);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 /* ─── Base Reset ──────────────────────────────────────────── */
@@ -44,7 +47,7 @@ html {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--surface-0);
+  background-color: var(--bg-main);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100dvh;
@@ -52,8 +55,8 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', sans-serif;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
 }
 
 a {
@@ -69,20 +72,19 @@ button {
 /* ─── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar        { width: 6px; }
 ::-webkit-scrollbar-track  { background: var(--surface-1); }
-::-webkit-scrollbar-thumb  { background: var(--surface-3); border-radius: 999px; }
+::-webkit-scrollbar-thumb  { background: #2a2a2a; border-radius: 0px; }
 
-/* ─── Glassmorphism card ──────────────────────────────────── */
+/* ─── Flat glass card ─────────────────────────────────────── */
 .glass {
-  background: rgba(35, 31, 53, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--surface-1);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 
 /* ─── Gradient text ───────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, var(--brand-light) 0%, #c4b5fd 50%, #818cf8 100%);
+  background: linear-gradient(135deg, var(--brand-light) 0%, #ffb27d 50%, var(--brand-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -95,18 +97,18 @@ button {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--brand-primary), #6d28d9);
-  color: #fff;
-  font-weight: 600;
+  background: var(--brand-primary);
+  color: #ffffff;
+  font-weight: 700;
   font-size: 0.9375rem;
-  border: none;
-  border-radius: var(--radius-md);
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  border: 1px solid var(--brand-primary);
+  border-radius: var(--radius-none);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-glow);
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.55);
+  transform: translateY(-1px);
+  filter: brightness(1.06);
 }
 .btn-primary:active {
   transform: translateY(0);
@@ -120,15 +122,15 @@ button {
   padding: 0.625rem 1.25rem;
   background: transparent;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-none);
   transition: all 0.2s ease;
 }
 .btn-ghost:hover {
   background: var(--surface-2);
   color: var(--text-primary);
-  border-color: rgba(167, 139, 250, 0.4);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 /* ─── Input ───────────────────────────────────────────────── */
@@ -137,8 +139,8 @@ button {
   padding: 0.75rem 1rem;
   background: var(--surface-2);
   color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--border-sharp);
+  border-radius: var(--radius-none);
   font-size: 0.9375rem;
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -147,7 +149,7 @@ button {
 .input::placeholder { color: var(--text-muted); }
 .input:focus {
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 85, 0, 0.5);
 }
 
 /* ─── Label ───────────────────────────────────────────────── */
@@ -173,26 +175,27 @@ button {
   background: var(--surface-1);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-card);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+  border-color: rgba(255, 85, 0, 0.35);
 }
 
 /* ─── Badge ───────────────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.625rem;
-  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-none);
   font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
-.badge-violet { background: rgba(124,58,237,0.2); color: var(--brand-light); }
-.badge-green  { background: rgba(52,211,153,0.15); color: var(--success); }
-.badge-amber  { background: rgba(251,191,36,0.15); color: var(--warning); }
+.badge-violet { background: rgba(255, 85, 0, 0.12); color: var(--brand-light); border: 1px solid rgba(255, 85, 0, 0.25); }
+.badge-green  { background: rgba(45, 212, 191, 0.08); color: var(--success); border: 1px solid rgba(45, 212, 191, 0.2); }
+.badge-amber  { background: rgba(251, 191, 36, 0.08); color: var(--warning); border: 1px solid rgba(251, 191, 36, 0.2); }
 
 /* ─── Data table ──────────────────────────────────────────── */
 .data-table {
@@ -203,8 +206,8 @@ button {
 .data-table th {
   text-align: left;
   padding: 0.75rem 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-muted);
@@ -213,10 +216,10 @@ button {
 .data-table td {
   padding: 0.875rem 1rem;
   color: var(--text-primary);
-  border-bottom: 1px solid rgba(167, 139, 250, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .data-table tbody tr:last-child td { border-bottom: none; }
-.data-table tbody tr:hover td { background: rgba(124, 58, 237, 0.05); }
+.data-table tbody tr:hover td { background: rgba(255, 85, 0, 0.04); }
 
 /* ─── Page fade-in animation ──────────────────────────────── */
 @keyframes fadeUp {

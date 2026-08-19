@@ -5,6 +5,7 @@
  * Must be a Client Component because it uses onClick and browser state.
  */
 import { useRouter } from 'next/navigation';
+import { LogOut } from 'lucide-react';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function LogoutButton() {
@@ -27,23 +28,27 @@ export default function LogoutButton() {
         border: 'none',
         color: 'var(--text-muted)',
         fontSize: '0.875rem',
-        fontWeight: 500,
+        fontWeight: 600,
         textAlign: 'left',
         borderRadius: 'var(--radius-sm)',
         cursor: 'pointer',
         transition: 'color 0.15s, background 0.15s',
         fontFamily: 'inherit',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.color = 'var(--danger)';
-        e.currentTarget.style.background = 'rgba(248, 113, 113, 0.08)';
+        e.currentTarget.style.color = 'var(--text-primary)';
+        e.currentTarget.style.background = 'rgba(255, 85, 0, 0.08)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.color = 'var(--text-muted)';
         e.currentTarget.style.background = 'transparent';
       }}
     >
-      🚪 Cerrar sesión
+      <LogOut size={16} strokeWidth={1.8} />
+      <span>Cerrar sesión</span>
     </button>
   );
 }

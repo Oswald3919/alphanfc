@@ -9,20 +9,21 @@
  * Hidden inputs carry the tracking payload; the button submits the form.
  */
 
+'use client';
+
 export default function ActionButton({
   tableId,
   actionType,
   redirectUrl,
-  icon,
+  icon: Icon,
   label,
   color,
   trackAction,
 }) {
   return (
     <form action={trackAction}>
-      {/* Hidden tracking payload */}
-      <input type="hidden" name="tableId"     value={tableId} />
-      <input type="hidden" name="actionType"  value={actionType} />
+      <input type="hidden" name="tableId" value={tableId} />
+      <input type="hidden" name="actionType" value={actionType} />
       <input type="hidden" name="redirectUrl" value={redirectUrl} />
 
       <button
@@ -35,8 +36,8 @@ export default function ActionButton({
           gap: '1rem',
           padding: '1rem 1.25rem',
           background: 'var(--surface-2)',
-          border: `1px solid ${color}30`,
-          borderRadius: 'var(--radius-md)',
+          border: `1px solid ${color}40`,
+          borderRadius: 'var(--radius-none)',
           color: 'var(--text-primary)',
           fontSize: '1rem',
           fontWeight: 600,
@@ -44,39 +45,37 @@ export default function ActionButton({
           cursor: 'pointer',
           transition: 'all 0.2s ease',
           textAlign: 'left',
-          boxShadow: `0 4px 20px ${color}15`,
+          boxShadow: `0 0 0 1px ${color}30`,
           touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = `${color}18`;
-          e.currentTarget.style.borderColor = `${color}60`;
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = `0 8px 28px ${color}30`;
+          e.currentTarget.style.background = `${color}12`;
+          e.currentTarget.style.borderColor = `${color}90`;
+          e.currentTarget.style.transform = 'translateY(-1px)';
+          e.currentTarget.style.boxShadow = `0 0 0 1px ${color}80`;
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.background = 'var(--surface-2)';
-          e.currentTarget.style.borderColor = `${color}30`;
+          e.currentTarget.style.borderColor = `${color}40`;
           e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = `0 4px 20px ${color}15`;
+          e.currentTarget.style.boxShadow = `0 0 0 1px ${color}30`;
         }}
       >
-        {/* Colored icon circle */}
         <span style={{
           width: '44px', height: '44px',
-          borderRadius: '50%',
-          background: `${color}20`,
+          borderRadius: '0',
+          background: `${color}18`,
+          border: `1px solid ${color}50`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.35rem',
           flexShrink: 0,
+          color: color,
         }}>
-          {icon}
+          {Icon ? <Icon size={18} strokeWidth={2} /> : null}
         </span>
 
         <span style={{ flex: 1 }}>{label}</span>
-
-        {/* Arrow indicator */}
-        <span style={{ color: color, opacity: 0.8, fontSize: '1.1rem' }}>→</span>
+        <span style={{ color: color, opacity: 0.9, fontSize: '1.1rem' }}>→</span>
       </button>
     </form>
   );
