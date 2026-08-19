@@ -12,7 +12,6 @@ import { NextResponse } from 'next/server';
 export async function proxy(request) {
   let supabaseResponse = NextResponse.next({ request });
 
-  // Build a Supabase client that can read/write cookies in middleware
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -22,36 +21,33 @@ export async function proxy(request) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          // Write new cookies to both the outgoing request and response
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options);
+          });
+        },
+        remove(name, options) {
+          supabaseResponse.cookies.delete(name, options);
         },
       },
     }
   );
 
-  // IMPORTANT: getUser() refreshes the session silently.
-  // Never use getSession() here — it does not validate the JWT.
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
 
-  // Protect /dashboard — redirect to login if not authenticated
-  if (pathname.startsWith('/dashboard') && !user) {
+  const isExpiredSession = Boolean(error && /expired|invalid.*jwt|refresh.*token/i.test(error.message || ''));
+
+  if (pathname.startsWith('/dashboard') && !user && !isExpiredSession) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/auth/login';
     redirectUrl.searchParams.set('redirectedFrom', pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Avoid showing login/register to already-authenticated users
   if (pathname.startsWith('/auth') && user) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/dashboard';

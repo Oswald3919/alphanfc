@@ -5,7 +5,6 @@
  */
 import { createClient } from '@/lib/supabase/server';
 import DashboardShell from '@/components/dashboard/DashboardShell';
-import DashboardAuthGuard from '@/components/dashboard/DashboardAuthGuard';
 
 export const metadata = { title: 'Panel de Control | AlphaNFC' };
 
@@ -23,11 +22,9 @@ export default async function DashboardLayout({ children }) {
     .single();
 
   return (
-    <DashboardAuthGuard>
-      <DashboardShell businessName={business?.name}>
-        {children}
-      </DashboardShell>
-    </DashboardAuthGuard>
+    <DashboardShell businessName={business?.name}>
+      {children}
+    </DashboardShell>
   );
 }
 
