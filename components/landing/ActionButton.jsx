@@ -9,8 +9,6 @@
  * Hidden inputs carry the tracking payload; the button submits the form.
  */
 
-'use client';
-
 import { BadgeCheck, Camera, FileText, Globe, MessageCircle, Music2, Phone, Star } from 'lucide-react';
 
 const iconMap = {
@@ -63,18 +61,6 @@ export default function ActionButton({
           boxShadow: `0 0 0 1px ${color}30`,
           touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = `${color}12`;
-          e.currentTarget.style.borderColor = `${color}90`;
-          e.currentTarget.style.transform = 'translateY(-1px)';
-          e.currentTarget.style.boxShadow = `0 0 0 1px ${color}80`;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'var(--surface-2)';
-          e.currentTarget.style.borderColor = `${color}40`;
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = `0 0 0 1px ${color}30`;
         }}
       >
         <span style={{

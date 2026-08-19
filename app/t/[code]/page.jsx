@@ -10,7 +10,7 @@
  * so no client-side JS is needed for analytics.
  */
 import { notFound } from 'next/navigation';
-import { FileText, MessageCircle, Star, Instagram, Facebook, Music2, Globe, Phone, Wifi, Copy } from 'lucide-react';
+import { BadgeCheck, Camera, Copy, FileText, Globe, MessageCircle, Music2, Phone, Star, Wifi } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { resolveWhatsAppUrl } from '@/lib/utils';
 import { trackAndRedirect } from '@/actions/track';
