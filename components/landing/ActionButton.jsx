@@ -11,12 +11,17 @@
 
 'use client';
 
-import { FileText, MessageCircle, Star } from 'lucide-react';
+import { BadgeCheck, Camera, FileText, Globe, MessageCircle, Music2, Phone, Star } from 'lucide-react';
 
 const iconMap = {
   star: Star,
   fileText: FileText,
   messageCircle: MessageCircle,
+  instagram: Camera,
+  facebook: BadgeCheck,
+  tiktok: Music2,
+  globe: Globe,
+  phone: Phone,
 };
 
 export default function ActionButton({

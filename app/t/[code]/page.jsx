@@ -10,7 +10,7 @@
  * so no client-side JS is needed for analytics.
  */
 import { notFound } from 'next/navigation';
-import { FileText, MessageCircle, Star } from 'lucide-react';
+import { FileText, MessageCircle, Star, Instagram, Facebook, Music2, Globe, Phone, Wifi, Copy } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { resolveWhatsAppUrl } from '@/lib/utils';
 import { trackAndRedirect } from '@/actions/track';
@@ -48,7 +48,14 @@ export default async function TrackingPage({ params }) {
         name,
         google_review_url,
         menu_url,
-        whatsapp_url
+        whatsapp_url,
+        instagram_url,
+        facebook_url,
+        tiktok_url,
+        website_url,
+        phone_number,
+        wifi_name,
+        wifi_password
       )
     `)
     .eq('code', code.toUpperCase())
@@ -61,14 +68,11 @@ export default async function TrackingPage({ params }) {
 
   const { id: tableId, location_name, businesses: business } = table;
 
-  // ── 2. Record the scan (fire-and-forget — no await blocking render) ──
-  // We do await here since it's server-side and fast; UX is not affected.
   await supabase.from('scans').insert({ table_id: tableId });
 
-  // ── 3. Resolve WhatsApp URL ───────────────────────────────
   const whatsappHref = resolveWhatsAppUrl(business.whatsapp_url);
+  const phoneHref = business.phone_number ? `tel:${business.phone_number.replace(/\D/g, '')}` : null;
 
-  // ── 4. Render mobile-first landing page ───────────────────
   return (
     <main style={{
       minHeight: '100dvh',
@@ -117,6 +121,66 @@ export default async function TrackingPage({ params }) {
           />
         )}
 
+        {business.instagram_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="instagram"
+            redirectUrl={business.instagram_url}
+            icon="instagram"
+            label="Ver Instagram"
+            color="#ff5500"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
+        {business.facebook_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="facebook"
+            redirectUrl={business.facebook_url}
+            icon="facebook"
+            label="Ver Facebook"
+            color="#1877f2"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
+        {business.tiktok_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="tiktok"
+            redirectUrl={business.tiktok_url}
+            icon="tiktok"
+            label="Ver TikTok"
+            color="#ff0050"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
+        {business.website_url && (
+          <ActionButton
+            tableId={tableId}
+            actionType="website"
+            redirectUrl={business.website_url}
+            icon="globe"
+            label="Visitar sitio web"
+            color="#8b5cf6"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
+        {business.phone_number && (
+          <ActionButton
+            tableId={tableId}
+            actionType="phone"
+            redirectUrl={phoneHref}
+            icon="phone"
+            label="Llamar al negocio"
+            color="#22c55e"
+            trackAction={trackAndRedirect}
+          />
+        )}
+
         {business.whatsapp_url && (
           <ActionButton
             tableId={tableId}
@@ -127,6 +191,32 @@ export default async function TrackingPage({ params }) {
             color="#ff5500"
             trackAction={trackAndRedirect}
           />
+        )}
+
+        {business.wifi_name && business.wifi_password && (
+          <div style={{ background: 'var(--surface-2)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0', background: 'rgba(34, 197, 94, 0.12)', border: '1px solid rgba(34, 197, 94, 0.4)', color: '#22c55e' }}>
+                <Wifi size={18} strokeWidth={2} />
+              </span>
+              <div>
+                <p style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Wi‑Fi gratis</p>
+                <strong style={{ fontSize: '1rem' }}>{business.wifi_name}</strong>
+              </div>
+            </div>
+
+            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', padding: '0.75rem 0.875rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontFamily: 'monospace', fontSize: '0.82rem', wordBreak: 'break-all' }}>{business.wifi_password}</span>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => navigator.clipboard?.writeText(business.wifi_password)}
+                style={{ padding: '0.45rem 0.7rem', minWidth: 'unset' }}
+              >
+                <Copy size={14} />
+              </button>
+            </div>
+          </div>
         )}
       </div>
 
